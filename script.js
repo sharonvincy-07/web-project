@@ -1,30 +1,35 @@
-// script.js
-document.addEventListener('DOMContentLoaded', function() {
-    var panoramaContainer = document.getElementById('panorama');
+// Function to trigger different types of notifications
+function triggerNotification(type, status) {
+    const notificationContainer = document.getElementById('notification-container');
+    let notificationMessage = '';
 
-    var panorama = new PANOLENS.Panorama('bus-interior.jpg');
-    var viewer = new PANOLENS.Viewer({
-        container: panoramaContainer,
-        autoHideControlBar: false
-    });
+    switch (type) {
+        case 'booking':
+            notificationMessage = status === 'confirmed'
+                ? 'Your booking has been confirmed!'
+                : 'Your booking has been cancelled!';
+            break;
+        case 'cancellation':
+            notificationMessage = 'Your booking has been cancelled.';
+            break;
+        case 'reminder':
+            notificationMessage = 'This is a reminder for your upcoming booking!';
+            break;
+        case 'offer':
+            notificationMessage = 'Special promotion! Get 20% off your next booking!';
+            break;
+    }
 
-    viewer.add(panorama);
+    const notification = document.createElement('div');
+    notification.classList.add('notification', type);
 
-    // Optional: Add a button to guide users to specific areas or seats
-    var infoButton = document.createElement('button');
-    infoButton.textContent = 'View Seat Arrangement';
-    infoButton.style.padding = '10px';
-    infoButton.style.marginTop = '20px';
-    infoButton.style.backgroundColor = '#007bff';
-    infoButton.style.color = 'white';
-    infoButton.style.border = 'none';
-    infoButton.style.borderRadius = '5px';
-    infoButton.style.cursor = 'pointer';
-    
-    infoButton.onclick = function() {
-        // Custom logic to show information about seating
-        alert("This is where the seating arrangement information can be shown!");
-    };
+    notification.innerHTML = notificationMessage;
 
-    document.querySelector('.tour-container').appendChild(infoButton);
-});
+    notificationContainer.appendChild(notification);
+
+    // Automatically hide notification after 5 seconds
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300); // Wait for fade out before removing
+    }, 5000);
+}
